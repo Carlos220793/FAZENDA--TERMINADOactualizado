@@ -1,0 +1,35 @@
+<?php
+include '../conexion.php';
+session_start();
+if ($_SESSION['rol'] !== 'admin') {
+    header("Location: ../index.php");
+    exit();
+}
+?>
+
+<h2>Administrar Ubicaciones</h2>
+
+<form action="agregar_ubicacion.php" method="POST">
+    <input type="text" name="nombre" placeholder="Nueva ubicación" required>
+    <button type="submit">Agregar</button>
+</form>
+
+<table border="1" style="margin-top: 20px;">
+    <tr><th>ID</th><th>Nombre</th><th>Eliminar</th></tr>
+    <?php
+    $sql = "SELECT * FROM ubicacion";
+    $result = mysqli_query($conexion, $sql);
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>
+                <td>{$row['id']}</td>
+                <td>{$row['nombre']}</td>
+                <td>
+                    <form action='eliminar_ubicacion.php' method='POST'>
+                        <input type='hidden' name='id' value='{$row['id']}'>
+                        <button type='submit'>Eliminar</button>
+                    </form>
+                </td>
+              </tr>";
+    }
+    ?>
+</table>
